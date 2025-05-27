@@ -2,7 +2,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Record
 from .forms import RecordForm
 from django.db.models import Q
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def record_list(request):
     query = request.GET.get('q')
     records = Record.objects.all()
