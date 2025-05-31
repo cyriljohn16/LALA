@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -74,17 +74,15 @@ WSGI_APPLICATION = 'shua.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'record',
-        'USER': 'root',
-        'PASSWORD': 'newpassword',
-        'HOST': 'localhost',
-        'PORT': '3307',
-    }
-}
-
+#DATABASES = {
+ #      'ENGINE': 'django.db.backends.mysql',
+      #  'NAME': 'record',
+     #   'USER': 'root',
+    #    'PASSWORD': 'newpassword',
+   #     'HOST': 'localhost',
+  #      'PORT': '3306',
+ #   }
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -121,6 +119,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 # Authentication settings
 LOGIN_URL = '/login/'
@@ -128,3 +128,19 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+import dj_database_url
+from decouple import config
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = config('SECRET_KEY')
+
+# For now during testing:
+DEBUG = config('DEBUG', default=True, cast=bool)
+
+ALLOWED_HOSTS = ['*']  # Or use Railway's domain later
+
+# Database config (replace default DATABASES)
+DATABASES = {
+    'default': dj_database_url.config(conn_max_age=600)
+}

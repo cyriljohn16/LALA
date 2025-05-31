@@ -16,46 +16,56 @@
     <a href="{% url 'add_record' %}" class="btn btn-success mb-3">Add New Record</a>
 
     {% if records %}
-        <table class="table table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Description</th>
-                    <th>Birthdate</th>
-                    <th>Price</th>
+     <table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Capital</th>
+            <th>SRP</th>
+            <th>Total Sold</th>
+            <th>Total Profit</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr>
+            <td>{{ record.name }}</td>
+            <td>{{ record.quantity }}</td>
+            <td>{{ record.description }}</td>
+            <td>{{ record.date|date:"M d, Y" }}</td>
+            <td>₱{{ record.capital }}</td>
+            <td>₱{{ record.srp }}</td>
+            <td>{{ record.total_sold }}</td>
+            <td>₱{{ record.total_profit }}</td>
+            <td>
+                <a href="{% url 'edit_record' record.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                <a href="{% url 'record_delete' record.pk %}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="9">No records found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
-                </tr>
-            </thead>
-            <tbody>
-                {% for record in records %}
-                <tr>
-                    <td>{{ record.name }}</td>
-                    <td>{{ record.quantity}}</td>
-                    <td>{{ record.description }}</td>
-                    <td>{{ record.birthdate}}</td>
-                    <td>{{ record.price }}</td>
-                    <td>
-                        <a href="{% url 'edit_record' record.id %}">Edit</a> |
-                        <a href="{% url 'record_delete' record.id %}" onclick="return confirm('Are you sure you want to delete this record?');">Delete</a>
-                      </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     {% else %}
         <p>No records found.</p>
     {% endif %}
 
-<nav>
- 
-  {% if user.is_authenticated %}
-    <form method="post" action="{% url 'logout' %}" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Logout</button>
-    </form>
-  {% endif %}
-</nav>
+    <nav>
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        {% endif %}
+    </nav>
 </div>
 </body>
 </html>
